@@ -889,7 +889,7 @@ macro_rules! fail_point {
 #[cfg(feature = "async")]
 mod async_imp {
     use super::*;
-    type BoxFuture<'a, T> = std::pin::Pin<Box<dyn std::future::Future<Output = T> + Send + 'a>>;
+    type BoxFuture<'a, T> = std::pin::Pin<Box<dyn std::future::Future<Output = T> + Send + Sync + 'a>>;
 
     #[derive(Clone)]
     pub(crate) struct AsyncCallback(
