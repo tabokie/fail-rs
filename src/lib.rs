@@ -1028,14 +1028,8 @@ mod async_imp {
                 Task::Off => {}
                 Task::Return(s) => return Some(s),
                 Task::Sleep(t) => {
-                    let not = Arc::new(tokio::sync::Notify::new());
-                    let not_for_thread = not.clone();
-                    let handle = std::thread::spawn(move || {
-                        std::thread::sleep(Duration::from_millis(t));
-                        not_for_thread.notify_waiters();
-                    });
-                    not.notified().await;
-                    handle.join().unwrap();
+                    // Assume we are inside tokio runtime.
+                    tokio::time::sleep(Duration::from_millis(t)).await;
                 }
                 Task::Panic(msg) => match msg {
                     Some(ref msg) => panic!("{}", msg),
